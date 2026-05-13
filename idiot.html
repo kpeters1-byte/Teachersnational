@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Are An Idiot</title>
+    <style>
+        body {
+            background-color: white;
+            margin: 0;
+            overflow: hidden;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        /* Style for the bouncing windows */
+        .idiot-window {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            background: #eee;
+            border: 3px solid #000;
+            box-shadow: 10px 10px 0px #888;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+            user-select: none;
+        }
+        .flash-black { background-color: black; color: white; }
+        .flash-white { background-color: white; color: black; }
+        
+        #start-btn {
+            padding: 20px 40px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10000;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="start-btn">Click to Start</button>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        let windows = [];
+
+        // Main trigger
+        startBtn.addEventListener('click', () => {
+            startBtn.style.display = 'none';
+            
+            // Start the flashing background effect
+            setInterval(flashScreen, 100);
+            
+            // Spawn the initial 3 bouncing windows
+            for(let i = 0; i < 3; i++) {
+                spawnWindow();
+            }
+            
+            // Start the physics/bouncing loop
+            requestAnimationFrame(updatePhysics);
+        });
+
+        // Alternates background colors rapidly
+        function flashScreen() {
+            if (document.body.style.backgroundColor === 'black') {
+                document.body.style.backgroundColor = 'white';
+            } else {
+                document.body.style.backgroundColor = 'black';
+            }
+        }
+
+        // Spawns a new bouncing box
+        function spawnWindow() {
+            const win = document.createElement('div');
+            win.className = 'idiot-window';
+            win.innerText = "you are an idiot!";
+            document.body.appendChild(win);
+
+            // Set text flashing interval inside the box
+            setInterval(() => {
+                win.classList.toggle('flash-black');
+                win.classList.toggle('flash-white');
+            }, 100);
+
+            // Physics properties
+            const winData = {
+                element: win,
+                x: Math.random() * (window.innerWidth - 250),
+                y: Math.random() * (window.innerHeight - 150),
+                dx: (Math.random() > 0.5 ? 4 : -4),
+                dy: (Math.random() > 0.5 ? 4 : -4),
+                width: 250,
+                height: 150
+            };
+
+            // Multiplying effect: clicking a box spawns 2 more
+            win.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                spawnWindow();
+                spawnWindow();
+            });
+
+            windows.push(winData);
+        }
+
+        // Bouncing physics engine
+        function updatePhysics() {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            windows.forEach(win => {
+                win.x += win.dx;
+                win.y += win.dy;
+
+                // Bounce off left/right walls
+                if (win.x <= 0 || win.x + win.width >= screenWidth) {
+                    win.dx *= -1;
+                }
+                // Bounce off top/bottom walls
+                if (win.y <= 0 || win.y + win.height >= screenHeight) {
+                    win.dy *= -1;
+                }
+
+                // Apply new positions to screen
+                win.element.style.left = win.x + 'px';
+                win.element.style.top = win.y + 'px';
+            });
+
+            requestAnimationFrame(updatePhysics);
+        }
+
+        // Block typical escape attempts
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' || e.ctrlKey && e.key === 'w') {
+                e.preventDefault();
+                alert("You can't escape!");
+            }
+        });
+    </script>
+</body>
+</html>
