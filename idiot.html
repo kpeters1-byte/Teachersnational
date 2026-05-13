@@ -48,101 +48,22 @@
     <button id="start-btn">Click to Start</button>
 
     <script>
-        const startBtn = document.getElementById('start-btn');
-        let windows = [];
+      const startBtn = document.getElementById('start-btn');
 
-        // Main trigger
-        startBtn.addEventListener('click', () => {
-            startBtn.style.display = 'none';
-            
-            // Start the flashing background effect
-            setInterval(flashScreen, 100);
-            
-            // Spawn the initial 3 bouncing windows
-            for(let i = 0; i < 3; i++) {
-                spawnWindow();
-            }
-            
-            // Start the physics/bouncing loop
-            requestAnimationFrame(updatePhysics);
-        });
+startBtn.addEventListener('click', () => {
+    // This will open ONE actual browser window because it is inside a click event
+    let newWindow = window.open(
+        'https://example.com', 
+        '_blank', 
+        'width=400,height=300,left=100,top=100'
+    );
 
-        // Alternates background colors rapidly
-        function flashScreen() {
-            if (document.body.style.backgroundColor === 'black') {
-                document.body.style.backgroundColor = 'white';
-            } else {
-                document.body.style.backgroundColor = 'black';
-            }
-        }
+    // This loop will be blocked by modern browser security settings!
+    for (let i = 0; i < 5; i++) {
+        window.open('https://example.com', '_blank', 'width=300,height=300');
+    }
+});
 
-        // Spawns a new bouncing box
-        function spawnWindow() {
-            const win = document.createElement('div');
-            win.className = 'idiot-window';
-            win.innerText = "you are an idiot!";
-            document.body.appendChild(win);
-
-            // Set text flashing interval inside the box
-            setInterval(() => {
-                win.classList.toggle('flash-black');
-                win.classList.toggle('flash-white');
-            }, 100);
-
-            // Physics properties
-            const winData = {
-                element: win,
-                x: Math.random() * (window.innerWidth - 250),
-                y: Math.random() * (window.innerHeight - 150),
-                dx: (Math.random() > 0.5 ? 4 : -4),
-                dy: (Math.random() > 0.5 ? 4 : -4),
-                width: 250,
-                height: 150
-            };
-
-            // Multiplying effect: clicking a box spawns 2 more
-            win.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-                spawnWindow();
-                spawnWindow();
-            });
-
-            windows.push(winData);
-        }
-
-        // Bouncing physics engine
-        function updatePhysics() {
-            const screenWidth = window.innerWidth;
-            const screenHeight = window.innerHeight;
-
-            windows.forEach(win => {
-                win.x += win.dx;
-                win.y += win.dy;
-
-                // Bounce off left/right walls
-                if (win.x <= 0 || win.x + win.width >= screenWidth) {
-                    win.dx *= -1;
-                }
-                // Bounce off top/bottom walls
-                if (win.y <= 0 || win.y + win.height >= screenHeight) {
-                    win.dy *= -1;
-                }
-
-                // Apply new positions to screen
-                win.element.style.left = win.x + 'px';
-                win.element.style.top = win.y + 'px';
-            });
-
-            requestAnimationFrame(updatePhysics);
-        }
-
-        // Block typical escape attempts
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' || e.ctrlKey && e.key === 'w') {
-                e.preventDefault();
-                alert("You can't escape!");
-            }
-        });
     </script>
 </body>
 </html>
