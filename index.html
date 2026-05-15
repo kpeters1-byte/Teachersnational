@@ -1,89 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1e1e2f;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
-
-        .letter {
-            font-size: 100px;
-            font-weight: bold;
-            margin-top: 60px;
-            color: #00ffcc;
-            text-shadow: 0 0 10px #00ffcc80;
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            background-color: #00bfff;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        button:hover {
-            background-color: #009acd;
-            transform: scale(1.05);
-        }
-
-        .spacer {
-            height: 40px;
-        }
-    </style>
-    <script>
-        window.onload = function () {
-            function calculateDaysInPST(fromDate, toDate) {
-                const fromUTC = Date.UTC(
-                    fromDate.getUTCFullYear(),
-                    fromDate.getUTCMonth(),
-                    fromDate.getUTCDate()
-                );
-                const toUTC = Date.UTC(
-                    toDate.getUTCFullYear(),
-                    toDate.getUTCMonth(),
-                    toDate.getUTCDate()
-                );
-                return Math.floor((toUTC - fromUTC) / (1000 * 60 * 60 * 24));
-            }
-
-            const today = new Date();
-            const todayPST = new Date(today.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
-            todayPST.setHours(0, 0, 0, 0);
-            const baseDatePST = new Date("2024-11-28T00:00:00-08:00");
-            const daysSinceBase = calculateDaysInPST(baseDatePST, todayPST);
-            const cycleLetters = ["T", "E", "M"];
-            const letter = cycleLetters[(daysSinceBase % 3 + 3) % 3];
-
-            const letterEl = document.createElement("div");
-            letterEl.className = "letter";
-            letterEl.textContent = letter;
-            document.body.appendChild(letterEl);
-        };
-    </script>
+    <title>ubg tools</title>
 </head>
+
 <body>
-    <button onclick="window.location.href='https://genizy.github.io/cc3d-mobile/'">
-        Go to crazycattle3d mobile
-    </button>
+    <h1>a bunch of tools for unblocked games</h1>
+    <p>1. <a href="obfuscate.html">url obfuscate</a></p>
+    <p>22. <a href="cdn-convert.html">cdn convert</a></p>
 </body>
+
 </html>
